@@ -23,36 +23,30 @@ function ting_get_object($object_id, $collection = FALSE) {
   }
 
   $object = NULL;
+
   // Check the cache first.
   $object = ting_cache_get($object_id, $collection);
+
   if (!$object) {
     // Put a negative reply in the cache. It will be overwritten by the
     // object, or ensure that we won't try to fetch this id again.
     ting_cache_set($object_id, NULL);
 
+    // TODO: Why do we check $object a second time?
     if (!$object) {
-      $request = ting_get_request_factory()->getCollectionRequest();
+      $request = ting_get_request_factory()->getObjectRequest();
+
       $request->setObjectId($object_id);
       if ($agency = variable_get('ting_agency', FALSE)) {
         $request->setAgency($agency);
       }
+
       $request->setAllRelations(TRUE);
       $request->setRelationData($collection ? 'uri' : 'full');
       $object = ting_execute_cache($request);
     }
   }
 
-  // If not asking for a collection, and the object is, return the
-  // sub-object with the same id.
-  if (!$collection && isset($object->objects)) {
-    foreach ($object->objects as $sub_object) {
-      if ($sub_object->id == $object_id) {
-        return $sub_object;
-      }
-    }
-    // No sub-object had the same id. Somethings broken.
-    return NULL;
-  }
   return $object;
 }
 
