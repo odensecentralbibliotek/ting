@@ -7,17 +7,9 @@
 /**
  * Get an ting object or collection.
  *
- * Returns the search response for the given id. This will cache the
- * result, and any sub-objects, so fetching objects from a recently
- * fetched collection won't trigger another backend request.
- *
  * @param $object_id The id to fetch.
- * @param $collection Whether to return a collection, if possible, or
- *   an object.
- *
- * @todo Should use getObject, but the ting-client lib doesn't implement that.
  */
-function ting_get_object($object_id, $collection = FALSE) {
+function ting_get_object($object_id) {
   if (empty($object_id)) {
     return FALSE;
   }
@@ -25,7 +17,7 @@ function ting_get_object($object_id, $collection = FALSE) {
   $object = NULL;
 
   // Check the cache first.
-  $object = ting_cache_get($object_id, $collection);
+  $object = ting_cache_get($object_id);
 
   if (!$object) {
     // Put a negative reply in the cache. It will be overwritten by the
@@ -42,7 +34,7 @@ function ting_get_object($object_id, $collection = FALSE) {
       }
 
       $request->setAllRelations(TRUE);
-      $request->setRelationData($collection ? 'uri' : 'full');
+      $request->setRelationData('full');
       $object = ting_execute_cache($request);
     }
   }
@@ -105,6 +97,44 @@ function ting_get_objects($ids) {
     }
   }
   return $objects;
+}
+
+/**
+ * Get a Ting collection.
+ *
+ * Returns the search response for the given id. This will cache the
+ * result of the search.
+ *
+ * @param $object_id The id to fetch.
+ * @param $collection Whether to return a collection, if possible, or
+ *   an object.
+ */
+function ting_get_collection($object_id) {
+  if (empty($object_id)) {
+    return FALSE;
+  }
+
+  $object = NULL;
+
+  // Check the cache first.
+  $object = ting_cache_get($object_id, TRUE);
+
+  if (!$object) {
+    // Put a negative reply in the cache. It will be overwritten by the
+    // object, or ensure that we won't try to fetch this id again.
+    ting_cache_set($object_id, NULL);
+
+    $request = ting_get_request_factory()->getCollectionRequest();
+    $request->setObjectId($object_id);
+    if ($agency = variable_get('ting_agency', FALSE)) {
+      $request->setAgency($agency);
+    }
+    $request->setAllRelations(TRUE);
+    $request->setRelationData('uri');
+    $object = ting_execute_cache($request);
+  }
+
+  return $object;
 }
 
 /**

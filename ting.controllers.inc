@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Entity controllers for TingEntity and TingCollection
@@ -231,7 +230,7 @@ class TingCollectionController implements DrupalEntityControllerInterface {
           $entities[$ding_entity_id] = $this->entityCache[$ding_entity_id];
         }
         else {
-          $reply = ting_get_object($ding_entity_id, TRUE);
+          $reply = ting_get_collection($ding_entity_id);
           $object = NULL;
           if ($reply) {
             $object = new TingCollection($ding_entity_id);
