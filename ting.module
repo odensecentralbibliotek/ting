@@ -503,7 +503,7 @@ function ting_ding_entity_buttons($type, $entity) {
     $label = isset($settings[$type]) && $settings[$type] ? $settings[$type] : $settings['_default'];
     return array(
       array(
-        '#prefix' => '<p class="ding-entity-button">',
+        '#prefix' => '<p class="btn ding-entity-button">',
         '#suffix' => '</p>',
         '#type' => 'markup',
         '#markup' => l($label, $entity->online_url, array('attributes'=>array('target'=>'_new')))
