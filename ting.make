@@ -14,7 +14,7 @@ projects[blackhole][version] = "1.1"
 ; Libraries
 
 libraries[ting-client][download][type] = "git"
-libraries[ting-client][download][url] = "git@github.com:ding2tal/ting-client.git"
+libraries[ting-client][download][url] = "https://github.com/odensecentralbibliotek/ting-client.git"
 libraries[ting-client][destination] = "modules/ting/lib"
 
 ; Ding 2 modules
