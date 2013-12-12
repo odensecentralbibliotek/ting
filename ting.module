@@ -911,7 +911,8 @@ function _ting_fetch_well_sources() {
   foreach ($result->facets['facet.acSource']->terms as $term => $count) {
     $sources[drupal_strtolower($term)] = $count;
   }
-
+  // Sort material types alphabetically.
+  ksort($sources);
   // Only save if we actually got any types.
   if (!empty($sources)) {
     variable_set('ting_well_sources', $sources);
