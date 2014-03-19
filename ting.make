@@ -5,6 +5,7 @@ core = 7.x
 
 projects[nanosoap][subdir] = contrib
 projects[nanosoap][version] = "1.0"
+projects[nanosoap][patch][1914526] = https://drupal.org/files/nanosoap-ns-header-config-1914526-1.patch
 
 projects[blackhole][subdir] = contrib
 projects[blackhole][version] = "1.1"
