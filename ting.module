@@ -829,6 +829,7 @@ function theme_ting_ranking_field($element) {
 function _ting_default_reservable_sources() {
   return array(
     'bibliotekets materialer',
+    'bibliotekskatalog' //Added for well3 , as it seems ddb changed the name.
   );
 }
 
