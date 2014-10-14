@@ -476,7 +476,7 @@ function ting_registry_files_alter(&$files, $modules) {
  */
 function ting_ding_entity_is($object, $class) {
   if ($class == 'reservable' || $class == 'cartable') {
-    $sources = variable_get('ting_reservable_sources', _ting_default_reservable_sources());
+    $sources = variable_get('ting_reservable_sources', _ting_default_reservable_sources());    
     $types = variable_get('ting_reservable_types', _ting_default_reservable_types());
     if (in_array(drupal_strtolower($object->ac_source), $sources) && in_array(drupal_strtolower($object->type), $types)) {
       return TRUE;
@@ -879,7 +879,7 @@ function _ting_fetch_well_types() {
     'sort' => 'random',
   );
   module_load_include('client.inc', 'ting');
-  $result = ting_do_search("*=*", 0, 0, $options);
+  $result = ting_do_search("*", 0, 0, $options);
 
   $types = array();
   foreach ($result->facets['facet.type']->terms as $term => $count) {
@@ -906,7 +906,7 @@ function _ting_fetch_well_sources() {
     'sort' => 'random',
   );
   module_load_include('client.inc', 'ting');
-  $result = ting_do_search("*=*", 0, 0, $options);
+  $result = ting_do_search("*", 0, 0, $options);
 
   $sources = array();
   foreach ($result->facets['facet.acSource']->terms as $term => $count) {
