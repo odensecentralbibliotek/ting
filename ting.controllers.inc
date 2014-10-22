@@ -17,7 +17,23 @@ class TingObjectController extends DrupalDefaultEntityController {
     if ($ids === FALSE) {
       $ids = array();
     }
+    
+    
+    /*
+     * Make sure all conditions are well 3 encoded.
+     */
+    if(isset($conditions['ding_entity_id']))
+    {
+        $Fixedids = array();
+        $Fixedids["ding_entity_id"] = array();
+        foreach($conditions['ding_entity_id'] as $ding_entity_id)
+        {
+            array_push($Fixedids["ding_entity_id"],ding_provider_build_entity_id(explode(':',$ding_entity_id)[1]) );
+        }
+        $conditions = $Fixedids;
+    }
 
+    
     // Ensure that the requested entities exists locally if getting by
     // ding_entity_id.
     $unknown = array();
@@ -71,7 +87,7 @@ class TingObjectController extends DrupalDefaultEntityController {
 
     $cached_entity_ids = array();
     foreach ($entities as $entity) {
-      $cached_entity_ids[] = $entity->ding_entity_id;
+      $cached_entity_ids[] =  ding_provider_build_entity_id(explode(':',$entity->ding_entity_id)[1]); 
     }
 
     // Load any remaining entities from the database. This is the case if $ids
