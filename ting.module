@@ -735,7 +735,7 @@ function ting_boost_field_element_process($element, $form_state) {
     '#type' => 'select',
     '#options' => array(
       '' => '- ' . t('Choose') . ' -',
-      'term.source' => t('Source'),
+      'term.acSource' => t('Source'),
       'term.creator' => t('Author'),
       'term.date' => t('Year of publish'),
       'term.language' => t('Language'),
@@ -793,12 +793,12 @@ function ting_ranking_field_element_process($element, $form_state) {
     '#type' => 'select',
     '#options' => array(
       '' => '- ' . t('Choose') . ' -',
-      'ac.source' => t('Source'),
-      'dc.title' => t('Title'),
-      'dc.creator' => t('Author'),
-      'dc.subject' => t('Subject'),
-      'dc.date' => t('Year of publish'),
-      'dc.type' => t('Material type'),
+      'term.acSource' => t('Source'), //original: ac.source
+      'term.title' => t('Title'),
+      'term.creator' => t('Author'),
+      'term.subject' => t('Subject'),
+      'term.date' => t('Year of publish'),
+      'term.type' => t('Material type'),
     ),
     '#default_value' => (isset($element['#value']['field_name'])) ? $element['#value']['field_name'] : NULL,
     '#attributes' => array('class' => array('field-name')),

@@ -234,13 +234,13 @@ function ting_do_search($query, $page = 1, $results_per_page = 10, $options = ar
   if ($boosts) {
     $uboosts = array();
     foreach ($boosts as $boost_field) {
-      $uboosts[] = array(
-        'fieldName' => $boost_field['field_name'],
-        'fieldValue' => $boost_field['field_value'],
-        'weight' => $boost_field['weight'],
-      );
+        $uboosts[] = array(
+            'fieldName' => $boost_field['field_name'],
+            'fieldValue' => $boost_field['field_value'],
+            'weight' => $boost_field['weight'],
+          );
     }
-    $request->userDefinedBoost = array('boostField' => $uboosts);
+    $request->userDefinedBoost = $uboosts;
   }
 
   $search_result = ting_execute_cache($request);

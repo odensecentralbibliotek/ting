@@ -28,7 +28,7 @@ class TingObjectController extends DrupalDefaultEntityController {
         $Fixedids["ding_entity_id"] = array();
         foreach($conditions['ding_entity_id'] as $ding_entity_id)
         {
-            array_push($Fixedids["ding_entity_id"],ding_provider_build_entity_id(explode(':',$ding_entity_id)[1]) );
+            array_push($Fixedids["ding_entity_id"],ding_provider_build_entity_id($ding_entity_id));
         }
         $conditions = $Fixedids;
     }
@@ -87,7 +87,7 @@ class TingObjectController extends DrupalDefaultEntityController {
 
     $cached_entity_ids = array();
     foreach ($entities as $entity) {
-      $cached_entity_ids[] =  ding_provider_build_entity_id(explode(':',$entity->ding_entity_id)[1]); 
+      $cached_entity_ids[] =  ding_provider_build_entity_id($entity->ding_entity_id); 
     }
 
     // Load any remaining entities from the database. This is the case if $ids
@@ -107,7 +107,7 @@ class TingObjectController extends DrupalDefaultEntityController {
     // Now load all objects in one go.
     $get_ids = !empty($conditions['ding_entity_id']) ? $conditions['ding_entity_id'] : array();
     foreach ($queried_entities as $qe) {
-      $get_ids[] = ding_provider_build_entity_id(explode(':',$qe->ding_entity_id)[1]); //Make sure to translate well2 to well 3
+      $get_ids[] = ding_provider_build_entity_id($qe->ding_entity_id); //Make sure to translate well2 to well 3
     }
     if ($get_ids && $load_ids = array_diff($get_ids, $cached_entity_ids)) {
       $objects = ting_get_objects($load_ids);
@@ -144,7 +144,7 @@ class TingObjectController extends DrupalDefaultEntityController {
     }
 
     foreach ($queried_entities as &$qe) {
-      $qe->reply = $objects[ding_provider_build_entity_id(explode(':',$qe->ding_entity_id)[1])];
+      $qe->reply = $objects[ding_provider_build_entity_id($qe->ding_entity_id)];
     }
     // Pass all entities loaded from the database through $this->attachLoad(),
     // which attaches fields (if supported by the entity type) and calls the
@@ -196,10 +196,10 @@ class TingObjectController extends DrupalDefaultEntityController {
     // This ensures the same behavior whether loading from memory or database.
     if ($conditions) {
       foreach ($entities as $entity) {
-        $entity_values = (array) $entity;
+        $entity_values = array($entity);
         $diffs = array_diff_assoc($conditions, $entity_values);
         if ($diffs) {
-          if (array_keys($diffs) != array('ding_entity_id') || !in_array($entity_values['ding_entity_id'], $diffs['ding_entity_id'])) {
+          if (array_keys($diffs) != array('ding_entity_id') || !in_array($entity_values[0]['ding_entity_id'], $diffs['ding_entity_id'])) {
             unset($entities[$entity->{$this->idKey}]);
           }}
       }
