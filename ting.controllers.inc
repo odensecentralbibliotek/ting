@@ -196,10 +196,10 @@ class TingObjectController extends DrupalDefaultEntityController {
     // This ensures the same behavior whether loading from memory or database.
     if ($conditions) {
       foreach ($entities as $entity) {
-        $entity_values = array($entity);
+        $entity_values = (array)$entity;
         $diffs = array_diff_assoc($conditions, $entity_values);
         if ($diffs) {
-          if (array_keys($diffs) != array('ding_entity_id') || !in_array($entity_values[0]['ding_entity_id'], $diffs['ding_entity_id'])) {
+          if (array_keys($diffs) != array('ding_entity_id') || !in_array($entity_values['ding_entity_id'], $diffs['ding_entity_id'])) {
             unset($entities[$entity->{$this->idKey}]);
           }}
       }
