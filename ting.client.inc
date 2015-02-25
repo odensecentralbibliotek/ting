@@ -242,7 +242,6 @@ function ting_do_search($query, $page = 1, $results_per_page = 10, $options = ar
     }
     $request->userDefinedBoost = $uboosts;
   }
-
   $search_result = ting_execute_cache($request);
   // Replace collections with proper TingCollection objects.
   if ($search_result && is_array($search_result->collections)) {
@@ -273,61 +272,70 @@ function ting_execute_cache($request) {
     $calls = array();
   }
   $calls[] = $request->getRequest()->getParameters();
-  $reply = ting_execute($request);
-
-  // Cache any sub-objects (mostly true for collections).
-  if (isset($reply->objects)) {
-    foreach ($reply->objects as $object) {
-      ting_cache_set($object->id, $object);
-      // Cache any relations.
-      if (isset($object->relations)) {
-        foreach ($object->relations as $relation) {
-          if (isset($relation->id)) {
-            ting_cache_set($relation->id, $relation);
-          }
-        }
-      }
-    }
-    // Cache the reply as the first object's id. This is for collections.
-    if (!isset($reply->id) and isset($reply->objects[0])) {
-      ting_cache_set($reply->objects[0]->id, $reply);
-    }
-  }
-
-  // Cache any collections. Done after objects to ensure that collections take
-  // precedence.
-  if (isset($reply->collections)) {
-    foreach ($reply->collections as &$collection) {
-      if (isset($collection->objects[0])) {
-        foreach ($collection->objects as $object) {
-          // Cache any relations.
-          if (isset($object->relations)) {
-            foreach ($object->relations as $relation) {
-              if (isset($relation->id)) {
-                ting_cache_set($relation->id, $relation);
+    //check if request has been done before , if it has return the cached response saving us a lookup
+    //in the data well.
+    $key = md5(serialize($calls));
+    $CachedQuery = cache_get($key,'cache_ting_query');
+    if($CachedQuery == false)
+    {
+        $reply = ting_execute($request);
+         //$reply =  ting_do_search($query, $page + 1, $resultsPerPage, $options);
+         //Save the response for a specified period.
+        $ttl = variable_get('ting_cache_lifetime', TING_DEFAULT_CACHE_LIFETIME);
+        cache_set($key,$reply,'cache_ting_query',REQUEST_TIME + $ttl);
+        // Cache any sub-objects (mostly true for collections).
+        if (isset($reply->objects)) {
+          foreach ($reply->objects as $object) {
+            ting_cache_set($object->id, $object);
+            // Cache any relations.
+            if (isset($object->relations)) {
+              foreach ($object->relations as $relation) {
+                if (isset($relation->id)) {
+                  ting_cache_set($relation->id, $relation);
+                }
               }
             }
           }
-          ting_cache_set($object->id, $object);
+        }
+        // Cache any collections. Done after objects to ensure that collections take
+        // precedence.
+        if (isset($reply->collections)) {
+          foreach ($reply->collections as &$collection) {
+            if (isset($collection->objects[0])) {
+              foreach ($collection->objects as $object) {
+                // Cache any relations.
+                if (isset($object->relations)) {
+                  foreach ($object->relations as $relation) {
+                    if (isset($relation->id)) {
+                      ting_cache_set($relation->id, $relation);
+                    }
+                  }
+                }
+                ting_cache_set($object->id, $object);
+              }
+
+              ting_cache_set($collection->objects[0]->id, $collection);
+            }
+          }
         }
 
-        ting_cache_set($collection->objects[0]->id, $collection);
-      }
+        // Cache any relations.
+        if (isset($reply->relations)) {
+          foreach ($reply->relations as $object) {
+            ting_cache_set($object->id, $object);
+          }
+        }
+
+        // Lastly cache the reply itself if it has an id.
+        if (isset($reply->id)) {
+          ting_cache_set($reply->id, $reply);
+        }
+   }
+    else
+    {
+        //return the cached well3 response. Saves allot of time.
+        $reply = $CachedQuery->data;
     }
-  }
-
-  // Cache any relations.
-  if (isset($reply->relations)) {
-    foreach ($reply->relations as $object) {
-      ting_cache_set($object->id, $object);
-    }
-  }
-
-  // Lastly cache the reply itself if it has an id.
-  if (isset($reply->id)) {
-    ting_cache_set($reply->id, $reply);
-  }
-
   return $reply;
 }
 
