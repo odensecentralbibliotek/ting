@@ -497,16 +497,36 @@ function ting_ding_entity_is($object, $class) {
  * Implements hook_ding_entity_buttons()
  */
 function ting_ding_entity_buttons($type, $entity) {
+   $settings = variable_get('ting_url_labels', _ting_default_url_labels());
+   $type = drupal_strtolower($entity->type);
+   $label = isset($settings[$type]) && $settings[$type] ? $settings[$type] : $settings['_default'];
   if ($entity instanceof TingEntity && $entity->online_url) {
-    $settings = variable_get('ting_url_labels', _ting_default_url_labels());
-    $type = drupal_strtolower($entity->type);
-    $label = isset($settings[$type]) && $settings[$type] ? $settings[$type] : $settings['_default'];
+   
+    //If the Link
+    if(strpos(urldecode($entity->online_url),'[useraccessinfomedia]') !== false
+    && strpos(urldecode ($entity->online_url),'action=getArticle') !== false) 
+   {
+       $splitresult = explode('faust=', urldecode($entity->online_url));
+       $splitresult = explode('&',  $splitresult[1]);
+       $entity->online_url = 'ting/infomedia/' . $splitresult[0];
+   }
     return array(
       array(
         '#prefix' => '<p class="btn ding-entity-button">',
         '#suffix' => '</p>',
         '#type' => 'markup',
         '#markup' => l($label, $entity->online_url, array('attributes'=>array('target'=>'_new')))
+      ),
+    );
+  }
+  else if($entity instanceof TingEntity && $entity->ac_source == "Materialevurderinger")
+  {
+          return array(
+      array(
+        '#prefix' => '<p class="btn ding-entity-button">',
+        '#suffix' => '</p>',
+        '#type' => 'markup',
+        '#markup' => l($label, ting_infomedia_get_article_link($entity->ding_entity_id), array('attributes'=>array('target'=>'_new')))  ,
       ),
     );
   }
