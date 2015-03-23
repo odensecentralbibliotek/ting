@@ -519,7 +519,8 @@ function ting_ding_entity_buttons($type, $entity) {
       ),
     );
   }
-  else if($entity instanceof TingEntity && $entity->ac_source == "Materialevurderinger")
+  else if($entity instanceof TingEntity && $entity->ac_source == "Materialevurderinger" || $entity->ac_source == "Tidsskriftsartikler"
+          || $entity->ac_source == "Avisartikler")
   {
           return array(
       array(
