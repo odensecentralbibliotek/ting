@@ -195,10 +195,11 @@ class TingObjectController extends DrupalDefaultEntityController {
     // Exclude any entities loaded from cache if they don't match $conditions.
     // This ensures the same behavior whether loading from memory or database.
     if ($conditions) {
-      // Check that conditions has ding_entity_id key.
-      if (!empty($conditions['ding_entity_id'])) {
-        foreach ($entities as $entity) {
-          if (!in_array($entity->ding_entity_id, $conditions['ding_entity_id'])) {
+      foreach ($entities as $entity) {
+        $entity_values = (array) $entity;
+        $diffs = drupal_array_diff_assoc_recursive($conditions, $entity_values);
+        if ($diffs) {
+          if (array_keys($diffs) != array('ding_entity_id') || !in_array($entity_values['ding_entity_id'], $diffs['ding_entity_id'])) {
             unset($entities[$entity->{$this->idKey}]);
           }
         }
