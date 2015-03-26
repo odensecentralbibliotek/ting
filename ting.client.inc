@@ -271,13 +271,15 @@ function ting_execute_cache($request) {
   if (!isset($calls)) {
     $calls = array();
   }
-  $calls[] = $request->getRequest()->getParameters();
+    $calls[] = $request->getRequest()->getParameters();
     //check if request has been done before , if it has return the cached response saving us a lookup
     //in the data well.
-    $key = md5(serialize($calls));
+    $test = serialize($calls);
+    $key = md5($test);
     $CachedQuery = cache_get($key,'cache_ting_query');
     if($CachedQuery == false)
     {
+        watchdog(WATCHDOG_DEBUG,"Query cache NOT hit For: %Query with cid: %cid",array('%Query' => $calls[0]['query'],'%cid' => $key));
         $reply = ting_execute($request);
          //$reply =  ting_do_search($query, $page + 1, $resultsPerPage, $options);
          //Save the response for a specified period.
@@ -334,6 +336,7 @@ function ting_execute_cache($request) {
     else
     {
         //return the cached well3 response. Saves allot of time.
+        watchdog(WATCHDOG_DEBUG,"Query cache hit For: %Query with cid: %cid",array('%Query' => $calls[0]['query'],'%cid' => $key));
         $reply = $CachedQuery->data;
     }
   return $reply;
