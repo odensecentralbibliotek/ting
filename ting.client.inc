@@ -348,7 +348,7 @@ function ting_execute_cache($request) {
 function ting_cache_get($id, $collection = FALSE) {
   $cid = 'ting-' . ($collection ? 'collection' : 'object') . ':' . $id;
   if ($ttl = variable_get('ting_cache_lifetime', TING_DEFAULT_CACHE_LIFETIME)) {
-    $cache = cache_get($cid);
+    $cache = cache_get($cid,'cache_ting_query');
     if ($cache && ($cache->expire > REQUEST_TIME)) {
       return $cache->data;
     }
@@ -379,7 +379,7 @@ function ting_cache_set($id, $value) {
   $cid .= ':' . $id;
 
   if ($ttl = variable_get('ting_cache_lifetime', TING_DEFAULT_CACHE_LIFETIME)) {
-    $cache = cache_set($cid, $value, 'cache', REQUEST_TIME + $ttl);
+    $cache = cache_set($cid, $value, 'cache_ting_query', REQUEST_TIME + $ttl);
   }
   else {
     // Without proper caching, use a request cache.
