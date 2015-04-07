@@ -377,7 +377,7 @@ function ting_field_formatter_view($entity_type, $entity, $field, $instance, $la
         if (count($entity->subjects) == TRUE) {
           $subjects = array();
           foreach ($entity->subjects as $subject) {
-            $subjects[] = l($subject, 'search/ting/term.subject=' . $subject, array('attributes' => array('class' => array('subject'))));
+            $subjects[] = l($subject, 'search/ting/term.subject="' . $subject . '"', array('attributes' => array('class' => array('subject'))));
           }
           $element[$delta] = array(
             '#markup' => implode(' ', $subjects),
