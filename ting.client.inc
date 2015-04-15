@@ -279,7 +279,7 @@ function ting_execute_cache($request) {
     $CachedQuery = cache_get($key,'cache_ting_query');
     if($CachedQuery == false)
     {
-        watchdog(WATCHDOG_DEBUG,"Query cache NOT hit For: %Query with cid: %cid",array('%Query' => $calls[0]['query'],'%cid' => $key));
+        watchdog(WATCHDOG_DEBUG,"Query cache NOT hit For: %Query with cid: %cid",array('%Query' => isset($calls[0]['query']) ? $calls[0]['query'] : "",'%cid' => $key));
         $reply = ting_execute($request);
          //$reply =  ting_do_search($query, $page + 1, $resultsPerPage, $options);
          //Save the response for a specified period.
@@ -336,7 +336,7 @@ function ting_execute_cache($request) {
     else
     {
         //return the cached well3 response. Saves allot of time.
-        watchdog(WATCHDOG_DEBUG,"Query cache hit For: %Query with cid: %cid",array('%Query' => $calls[0]['query'],'%cid' => $key));
+        watchdog(WATCHDOG_DEBUG,"Query cache hit For: %Query with cid: %cid",array('%Query' => isset($calls[0]['query']) ? $calls[0]['query'] : "",'%cid' => $key));
         $reply = $CachedQuery->data;
     }
   return $reply;
