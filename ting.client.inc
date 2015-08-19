@@ -61,7 +61,7 @@ function ting_get_object($object_id, $collection = FALSE) {
       if (!empty($profile) && method_exists($request, 'setProfile')) {
 	$request->setProfile($profile);
       }
-
+      $request->setRelationData('full');
       $request->setAllObjects(false);
       $object = ting_execute_cache($request);
     }

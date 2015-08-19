@@ -216,7 +216,7 @@ function getOnline_url($get_relations = TRUE) {
       // relations. First check if relations are set; if not do another request
       // to get relations
       if (!isset($this->reply->relationsData)) {
-        $tingClientObject = ting_get_object($this->ding_entity_id, FALSE, TRUE);
+        $tingClientObject = ting_get_object($this->ding_entity_id);
         if (isset($tingClientObject->relationsData)) {
           $this->reply->relationsData = $tingClientObject->relationsData;
         }
