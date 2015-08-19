@@ -126,7 +126,8 @@ function ting_get_objects($ids) {
     $request->setStart(1);
     $request->setNumResults(50);
     $request->setAllObjects(TRUE);
-
+    $request->setRelationData('full');
+    
     $result = ting_execute_cache($request);
 
     if ($result && is_array($result->collections)) {
