@@ -311,7 +311,18 @@ function ting_field_formatter_view($entity_type, $entity, $field, $instance, $la
         }
         if ($display['settings']['link_type'] != 'none') {
           $url = entity_uri($type, $entity);
-          $title = l($entity->title, $url['path'], $url['options']);
+          if (strpos($url['path'], 'kunfyn') !== FALSE)
+          {
+              /*
+               * fixup special case.
+               */
+               $title = urldecode(l($entity->title, $url['path'], $url['options']));
+          }
+          else
+          {
+              $title = l($entity->title, $url['path'], $url['options']);
+          }
+          
         }
         else {
           $title = check_plain($entity->title);
