@@ -510,6 +510,10 @@ function ting_ding_entity_buttons($type, $entity) {
        $splitresult = explode('&',  $splitresult[1]);
        $entity->online_url = 'ting/infomedia/' . $splitresult[0];
    }
+   elseif(strpos(urldecode($entity->online_url),'ordbog.gyldendal.dk') != false)
+   {
+       $entity->online_url = urldecode($entity->online_url);
+   }
     return array(
       array(
         '#prefix' => '<p class="btn ding-entity-button">',
