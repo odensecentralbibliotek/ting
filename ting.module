@@ -514,6 +514,10 @@ function ting_ding_entity_buttons($type, $entity) {
    {
        $entity->online_url = urldecode($entity->online_url);
    }
+   elseif(strpos(urldecode($entity->online_url),'ic.galegroup.com') != false)
+   {
+       $entity->online_url = urldecode($entity->online_url);
+   }
     return array(
       array(
         '#prefix' => '<p class="btn ding-entity-button">',
