@@ -252,6 +252,7 @@ function ting_do_search($query, $page = 1, $results_per_page = 10, $options = ar
     }
     $request->userDefinedBoost = $uboosts;
   }
+  $request->setRelationData('full');
   $search_result = ting_execute_cache($request);
   // Replace collections with proper TingCollection objects.
   if ($search_result && is_array($search_result->collections)) {
