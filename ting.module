@@ -503,13 +503,14 @@ function ting_ding_entity_buttons($type, $entity) {
   if ($entity instanceof TingEntity && $entity->online_url) {
    
     //If the Link
-    /*if(strpos(urldecode($entity->online_url),'[useraccessinfomedia]') !== false
+   if(strpos(urldecode($entity->online_url),'[useraccessinfomedia]') !== false
     && strpos(urldecode ($entity->online_url),'action=getArticle') !== false) 
    {
        $splitresult = explode('faust=', urldecode($entity->online_url));
        $splitresult = explode('&',  $splitresult[1]);
        $entity->online_url = 'ting/infomedia/' . $splitresult[0];
    }
+    /*
    elseif(strpos(urldecode($entity->online_url),'ordbog.gyldendal.dk') != false)
    {
        $entity->online_url = urldecode($entity->online_url);
