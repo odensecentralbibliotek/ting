@@ -44,7 +44,7 @@ function ting_get_object($object_id, $collection = FALSE) {
   }
 
   // Check the cache first.
-  $object = null;
+  /*$object = null;
   if (strpos($object_id, 'kunfyn') !== FALSE)
   {
       $object = null;
@@ -52,8 +52,8 @@ function ting_get_object($object_id, $collection = FALSE) {
   else
   {
       $object = ting_cache_get($object_id, $collection);
-  }
-  
+  }*/
+  $object = ting_cache_get($object_id, $collection);
   if (!$object) {
     // Put a negative reply in the cache. It will be overwritten by the
     // object, or ensure that we won't try to fetch this id again.
