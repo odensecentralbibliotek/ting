@@ -503,7 +503,7 @@ function ting_ding_entity_buttons($type, $entity) {
   if ($entity instanceof TingEntity && $entity->online_url) {
    
     //If the Link
-    if(strpos(urldecode($entity->online_url),'[useraccessinfomedia]') !== false
+    /*if(strpos(urldecode($entity->online_url),'[useraccessinfomedia]') !== false
     && strpos(urldecode ($entity->online_url),'action=getArticle') !== false) 
    {
        $splitresult = explode('faust=', urldecode($entity->online_url));
@@ -517,7 +517,7 @@ function ting_ding_entity_buttons($type, $entity) {
    elseif(strpos(urldecode($entity->online_url),'ic.galegroup.com') != false)
    {
        $entity->online_url = urldecode($entity->online_url);
-   }
+   }*/
     return array(
       array(
         '#prefix' => '<p class="btn ding-entity-button">',
