@@ -44,16 +44,16 @@ function ting_get_object($object_id, $collection = FALSE) {
   }
 
   // Check the cache first.
-  /*$object = null;
-  if (strpos($object_id, 'kunfyn') !== FALSE)
+  $object = null;
+  if (strpos($object_id, '00060879') !== FALSE)
   {
       $object = null;
   }
   else
   {
       $object = ting_cache_get($object_id, $collection);
-  }*/
-  $object = ting_cache_get($object_id, $collection);
+  }
+  //$object = ting_cache_get($object_id, $collection);
   if (!$object) {
     // Put a negative reply in the cache. It will be overwritten by the
     // object, or ensure that we won't try to fetch this id again.
@@ -70,8 +70,8 @@ function ting_get_object($object_id, $collection = FALSE) {
       if (!empty($profile) && method_exists($request, 'setProfile')) {
 	$request->setProfile($profile);
       }
-      $request->setRelationData('full');
       $request->setAllObjects(false);
+      $request->setRelationData('full');
       $object = ting_execute_cache($request);
     }
   }
