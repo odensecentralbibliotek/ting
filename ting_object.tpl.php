@@ -11,11 +11,13 @@
  */
 ?>
 <div class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
-    <?php echo render($content);
+    <?php 
     if(isset($material_description) && $material_description != "")
     {
         echo t('<br/><h4><b>Bibliotekarens noter:</b></h4> ') .$material_description;
     }
+    echo render($content);
+    
     ?>
 
 </div>
