@@ -18,15 +18,13 @@
     <?php
     if(isset($material_description) && $material_description != "")
     {
-    ?>
-    <style>
+        echo "<style>
         .ting-object{
             box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
             transition: 0.3s;
             padding: 5px;
         }
-    </style>
-    <?php
+    </style>";
         echo "<div>";
         echo t('<br/><h4><b>Bibliotekarens noter:</b></h4> ') .$material_description;
         echo "<br/></div>";
