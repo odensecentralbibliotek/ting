@@ -24,7 +24,8 @@
     <?php
     if(isset($material_description) && $material_description != "")
     {
-        echo t('<div><br/><h4><b>Bibliotekarens noter:</b></h4> ') .$material_description;
+        echo "<div>";
+        echo t('<br/><h4><b>Bibliotekarens noter:</b></h4> ') .$material_description;
         echo "<br/></div>";
     }
     ?>
