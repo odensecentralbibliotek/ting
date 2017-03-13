@@ -589,16 +589,35 @@ function ting_page_title($object) {
 
 /**
  * Callback for entity_uri(). Returns the uri for the object.
+ * Handle docbook links , need to update ding modules to make it work on depper
+ * level.
  */
 function ting_object_uri($collection) {
-  return array('path' => 'ting/object/' . $collection->id);
+    if(isset($collection->reply->formatsAvailable) && in_array('docbook', $collection->reply->formatsAvailable))
+    {
+         return array('path' => 'ting/object/' . $collection->id . "/fulltext");
+    }
+    else
+    {
+         return array('path' => 'ting/object/' . $collection->id);
+    }
+ 
 }
 
 /**
  * Callback for entity_uri(). Returns the uri for the collection.
+ * Handle docbook links , need to update ding modules to make it work on depper
+ * level.
  */
 function ting_collection_uri($collection) {
-  return array('path' => 'ting/collection/' . $collection->id);
+     if(isset($collection->reply->formatsAvailable) && in_array('docbook', $collection->reply->formatsAvailable))
+     {
+         return array('path' => 'ting/object/' . $collection->id . "/fulltext");
+     }
+     else
+     {
+        return array('path' => 'ting/collection/' . $collection->id);
+     }
 }
 
 /**
