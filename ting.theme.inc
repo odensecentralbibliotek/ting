@@ -42,6 +42,27 @@ function template_preprocess_ting_object(&$variables) {
                 $description  = isset($node->field_ding_news_material_descrip['und'][$key]['value']) 
                         && $node->field_ding_news_material_descrip['und'][$key]['value'] != "." 
                         ? $node->field_ding_news_material_descrip['und'][$key]['value'] : '';
+                
+
+                break;
+            }
+        }
+        $variables['material_description'] =  $description;
+    }
+    if(isset($node) && $node->type == "ding_page")
+    {
+        $t_id = $variables['object']->tid; // the correct id for the material.
+        $description = "";
+        foreach($node->field_ding_page_materials['und'] as $key => $relation)
+        {
+            $relation_id = $relation['value']->endpoints['und'][1]['entity_id'];
+            if($relation_id == $t_id )
+            {
+                //We found the relationship index.
+                $description  = isset($node->field_ding_page_material_descrip['und'][$key]['value']) 
+                        && $node->field_ding_page_material_descrip['und'][$key]['value'] != "." 
+                        ? $node->field_ding_page_material_descrip['und'][$key]['value'] : '';
+                
 
                 break;
             }
