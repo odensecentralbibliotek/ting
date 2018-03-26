@@ -335,10 +335,47 @@ function ting_field_formatter_view($entity_type, $entity, $field, $instance, $la
         break;
       case 'ting_series_default':
         if ($entity->serieTitle) {
-          $element[$delta] = array(
-            // should use phrase.title instead of dc.title but at the moment opensearch does not support the use of phrase.title
-            '#markup' => l(check_plain($entity->serieTitle), 'search/ting/' . variable_get('ting_admin_register_serie_title', 'phrase.title') . '="' . drupal_strtolower($entity->serieTitle) . '"', array('attributes' => array('class' => array('series')))) . ' : ' . check_plain($entity->serieNumber),
-          );
+            /*
+             * Element has a serietitel
+             * but the current entity object , does not handle multiple serires.
+             * Migth need to be propegated deeper , but this will work for now
+             */
+                $markup = "";
+                $series_data = $entity->reply->record["dc:title"]['dkdcplus:series'];
+                foreach($series_data as $index => $series)
+                {
+                    $data = explode(";", $series);
+                    $series_number = null;
+                    if(sizeof($data) >1)
+                    {
+                        $series_number = $data[1];
+                    }
+                    $markup .= l(check_plain($data[0]), 'search/ting/' . variable_get('ting_admin_register_serie_title', 'phrase.title') . '="' . drupal_strtolower($data[0]) . '"', array('attributes' => array('class' => array('series'))));
+                    if($series_number != null)
+                    {
+                        if($index != sizeof($series_data)-1)
+                        {
+                            $markup .= ": " . trim($series_number) . ", ";
+                        }
+                        else
+                        {
+                            $markup .= ": " . trim($series_number);
+                        }
+                    }
+                    else
+                    {
+                        if($index != sizeof($series_data)-1)
+                        {
+                            $markup .= ", ";
+                        }
+                    }
+                    
+                }
+                $element[$delta] = array(
+                // should use phrase.title instead of dc.title but at the moment opensearch does not support the use of phrase.title
+                '#markup' => $markup,
+              );
+
         }
         break;
       case 'ting_abstract_default':
