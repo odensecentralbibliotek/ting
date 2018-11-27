@@ -259,6 +259,7 @@ function ting_do_search($query, $page = 1, $results_per_page = 10, $options = ar
     $request->userDefinedBoost = $uboosts;
   }
   $request->setRelationData('full');
+  $params = module_invoke_all('opensearch_pre_execute', $request);
   $search_result = ting_execute_cache($request);
   // Replace collections with proper TingCollection objects.
   if ($search_result && is_array($search_result->collections)) {
@@ -297,6 +298,7 @@ function ting_execute_cache($request) {
     if($CachedQuery == false)
     {
         watchdog(WATCHDOG_DEBUG,"Query cache NOT hit For: %Query with cid: %cid",array('%Query' => isset($calls[0]['query']) ? $calls[0]['query'] : "",'%cid' => $key));
+        $params = module_invoke_all('opensearch_pre_execute', $request->getRequest());
         $reply = ting_execute($request);
          //$reply =  ting_do_search($query, $page + 1, $resultsPerPage, $options);
          //Save the response for a specified period.
