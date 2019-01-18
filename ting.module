@@ -663,6 +663,9 @@ function ting_collection_load($id) {
  * Display a ting object.
  */
 function ting_object_view($object, $view_mode = 'full', $langcode = NULL) {
+  if($cached = cache_get('ting-object-view-'.$object->id, 'cache'))  {
+      return $cached->data;
+  }
   if (!isset($langcode)) {
     $langcode = $GLOBALS['language_content']->language;
   }
@@ -688,7 +691,9 @@ function ting_object_view($object, $view_mode = 'full', $langcode = NULL) {
   );
 
   drupal_alter('ting_view', $build);
-
+  $cache_time = '+24 hour';
+  $expire = strtotime($cache_time, time());
+  cache_set('ting-object-view-'.$object->id, $build, 'cache', $expire); 
   return $build;
 }
 
@@ -696,6 +701,9 @@ function ting_object_view($object, $view_mode = 'full', $langcode = NULL) {
  * Display a ting collection.
  */
 function ting_collection_view($object, $view_mode = 'full', $langcode = NULL) {
+    if($cached = cache_get('ting-collection-view-'.$object->id, 'cache'))  {
+      return $cached->data;
+  }
   if (!isset($langcode)) {
     $langcode = $GLOBALS['language_content']->language;
   }
@@ -722,6 +730,9 @@ function ting_collection_view($object, $view_mode = 'full', $langcode = NULL) {
   );
 
   drupal_alter('ting_collection_view', $build);
+  $cache_time = '+24 hour';
+  $expire = strtotime($cache_time, time());
+  cache_set('ting-collection-view-'.$object->id, $build, 'cache', $expire);
   return $build;
 }
 
