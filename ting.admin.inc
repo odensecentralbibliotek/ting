@@ -94,6 +94,14 @@ function ting_admin_ting_settings($form_state) {
     '#description' => t("Cache answers from the datawell for this time. At least a few minutes is recommended, so the same objects doesn't have to be fetched on each page request."),
     '#weight' => 1,
   );
+  $form['ting']['ting_object_view_lifetime'] = array(
+    '#type' => 'select',
+    '#title' => t('Object view rendering Cache lifetime'),
+    '#default_value' => variable_get('ting_object_view_lifetime', TING_DEFAULT_CACHE_LIFETIME),
+    '#options' => $options,
+    '#description' => t("Cache ting object render arrays for faster showing of objects."),
+    '#weight' => 1,
+  );
 
   $form['ting']['ting_search_profile'] = array(
     '#type' => 'textfield',

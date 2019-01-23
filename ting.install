@@ -82,10 +82,24 @@ function ting_schema() {
       ),
     ),
   );
+  /**
+    * Implements hook_schema().
+    */
+
+    $schema['cache_ting_object_view'] = drupal_get_schema_unprocessed('system', 'cache');
+    
 
   return $schema;
 }
-
+/**
+ * Create new database table {cache_ting_object_view}.
+ */
+function ting_update_3() {
+    /*
+     * Allot of objecs are gonna get cached here..lets move to own table
+     */
+  db_create_table('cache_ting_object_view', drupal_get_schema_unprocessed('system', 'cache'));
+}
 /**
  * Implements hook_ding_entity_fields().
  */

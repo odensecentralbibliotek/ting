@@ -663,7 +663,7 @@ function ting_collection_load($id) {
  * Display a ting object.
  */
 function ting_object_view($object, $view_mode = 'full', $langcode = NULL) {
-  if($cached = cache_get('ting-object-view-'.$object->id . "-" . $view_mode, 'cache'))  {
+  if($cached = cache_get('ting-object-view-'.$object->id . "-" . $view_mode, 'cache_ting_object_view'))  {
       return $cached->data;
   }
   if (!isset($langcode)) {
@@ -691,9 +691,9 @@ function ting_object_view($object, $view_mode = 'full', $langcode = NULL) {
   );
 
   drupal_alter('ting_view', $build);
-  $cache_time = '+24 hour';
-  $expire = strtotime($cache_time, time());
-  cache_set('ting-object-view-'.$object->id."-" . $view_mode, $build, 'cache', $expire); 
+
+  $expire = REQUEST_TIME + variable_get('ting_object_view_lifetime', TING_DEFAULT_CACHE_LIFETIME);
+  cache_set('ting-object-view-'.$object->id."-" . $view_mode, $build, 'cache_ting_object_view', $expire); 
   return $build;
 }
 
@@ -701,7 +701,7 @@ function ting_object_view($object, $view_mode = 'full', $langcode = NULL) {
  * Display a ting collection.
  */
 function ting_collection_view($object, $view_mode = 'full', $langcode = NULL) {
-    if($cached = cache_get('ting-collection-view-'.$object->id."-".$view_mode, 'cache'))  {
+    if($cached = cache_get('ting-collection-view-'.$object->id."-".$view_mode, 'cache_ting_object_view'))  {
       return $cached->data;
   }
   if (!isset($langcode)) {
@@ -730,9 +730,8 @@ function ting_collection_view($object, $view_mode = 'full', $langcode = NULL) {
   );
 
   drupal_alter('ting_collection_view', $build);
-  $cache_time = '+24 hour';
-  $expire = strtotime($cache_time, time());
-  cache_set('ting-collection-view-'.$object->id."-".$view_mode, $build, 'cache', $expire);
+  $expire = REQUEST_TIME + variable_get('ting_object_view_lifetime', TING_DEFAULT_CACHE_LIFETIME);
+  cache_set('ting-collection-view-'.$object->id."-".$view_mode, $build, 'cache_ting_object_view', $expire);
   return $build;
 }
 
@@ -978,4 +977,16 @@ function _ting_fetch_well_sources() {
   if (!empty($sources)) {
     variable_set('ting_well_sources', $sources);
   }
+}
+function ting_admin_menu_cache_info()
+{
+    $caches['ting_object_view_cache'] = array(
+      'title' => 'Object view cache',
+      'callback' => 'ting_admin_menu_flush_cache',
+    );
+    return $caches;
+}
+function ting_admin_menu_flush_cache($name = NULL)
+{
+    cache_clear_all('*', 'cache_ting_object_view', TRUE);
 }
