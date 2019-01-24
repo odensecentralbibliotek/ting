@@ -710,17 +710,20 @@ function ting_collection_view($object, $view_mode = 'full', $langcode = NULL) {
     if($cached = cache_get('ting-collection-view-'.$object->id."-".$view_mode, 'cache_ting_object_view'))  {
       //$elements = module_invoke_all('ding_entity_buttons', 'ding_entity', $object);
       //$cached->data["ding_entity_buttons"][0] = $elements;
-        foreach(element_children($cached->data['ting_entities']) as $key => $elem)
+        if($view_mode == "full" && isset($cached->data['ting_entities']))
         {
-            foreach(element_children($cached->data['ting_entities'][$elem]) as $group)
+            foreach(element_children($cached->data['ting_entities']) as $key => $elem)
             {
-                foreach(element_children($cached->data['ting_entities'][$elem][$group]) as  $index => $objectid)
+                foreach(element_children($cached->data['ting_entities'][$elem]) as $group)
                 {
-                    if(isset( $cached->data['ting_entities'][$elem][$group][$objectid]["ding_entity_buttons"]))
+                    foreach(element_children($cached->data['ting_entities'][$elem][$group]) as  $index => $objectid)
                     {
-                        $object = $cached->data['ting_entities'][$elem][$group][$objectid];
-                        $elements = module_invoke_all('ding_entity_buttons', 'ding_entity', $object['#object']);
-                        $cached->data['ting_entities'][$elem][$group][$objectid]["ding_entity_buttons"][0] = $elements;
+                        if(isset( $cached->data['ting_entities'][$elem][$group][$objectid]["ding_entity_buttons"]))
+                        {
+                            $object = $cached->data['ting_entities'][$elem][$group][$objectid];
+                            $elements = module_invoke_all('ding_entity_buttons', 'ding_entity', $object['#object']);
+                            $cached->data['ting_entities'][$elem][$group][$objectid]["ding_entity_buttons"][0] = $elements;
+                        }
                     }
                 }
             }
