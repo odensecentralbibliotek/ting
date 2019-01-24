@@ -664,6 +664,9 @@ function ting_collection_load($id) {
  */
 function ting_object_view($object, $view_mode = 'full', $langcode = NULL) {
   if($cached = cache_get('ting-object-view-'.$object->id . "-" . $view_mode, 'cache_ting_object_view'))  {
+      //update the buttons everytime as they are form api dependant. their cache will timeout and ajax functionality will break.
+      $elements = module_invoke_all('ding_entity_buttons', 'ding_entity', $object);
+      $cached->data["ding_entity_buttons"][0] = $elements;
       return $cached->data;
   }
   if (!isset($langcode)) {
