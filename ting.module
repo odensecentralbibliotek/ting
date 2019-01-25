@@ -670,25 +670,30 @@ function ting_object_view($object, $view_mode = 'full', $langcode = NULL) {
         $elements = module_invoke_all('ding_entity_buttons', 'ding_entity', $object);
         $cached->data["ding_entity_buttons"][0] = $elements;
       }
-      //unset($cached->data['ting_relations']);
-      $relation_array = array();
-        $relation_types = ting_relation_inline();
-        foreach ($object->relations as $relation) {
-          if (isset($relation_types[$relation->type])) {
-            $ownerId = is_object($relation->object) ? $relation->object->ownerId : NULL;
-            if ($relation->type == 'isPartOfManifestation' && variable_get('ting_agency', -1) != $ownerId) {
-              continue;
+      /*
+       * if result has relations rebuild them , as they are lost in serialization.
+       */
+      if(isset($object->relations))
+      {
+        $relation_array = array();
+          $relation_types = ting_relation_inline();
+          foreach ($object->relations as $relation) {
+            if (isset($relation_types[$relation->type])) {
+              $ownerId = is_object($relation->object) ? $relation->object->ownerId : NULL;
+              if ($relation->type == 'isPartOfManifestation' && variable_get('ting_agency', -1) != $ownerId) {
+                continue;
+              }
+              $relation_array[$relation->type][] = array(
+                '#theme' => 'ting_relation',
+                '#ac_source' => $entity->ac_source,
+                '#relation' => $relation,
+                '#object' => $relation->object,
+                '#title' => $relation_types[$relation->type],
+              );
             }
-            $relation_array[$relation->type][] = array(
-              '#theme' => 'ting_relation',
-              '#ac_source' => $entity->ac_source,
-              '#relation' => $relation,
-              '#object' => $relation->object,
-              '#title' => $relation_types[$relation->type],
-            );
           }
-        }
-       $cached->data['ting_relations']['#relations'] = $relation_array;
+         $cached->data['ting_relations']['#relations'] = $relation_array;
+      }
       return $cached->data;
   }
   if (!isset($langcode)) {
