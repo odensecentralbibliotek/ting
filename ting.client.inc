@@ -3,7 +3,7 @@
  * @file
  * Wrapper functions for Ting client.
  */
-
+define('TING_CACHE_EMPTY_ENTRY', '8e4f3ef1784c020bf7afa5b6dd69b421'); // this seems stupid ?!
 
 function ting_get_object_request($object_id) {
   $request = ting_get_request_factory()->getObjectRequest();
