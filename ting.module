@@ -5,7 +5,7 @@
  */
 
 define('TING_DEFAULT_CACHE_LIFETIME', 0);
-
+define('TING_CACHE_TING_OBJECT', 'ting-object');
 // Load Field module hooks.
 module_load_include('inc', 'ting', 'ting.field');
 
