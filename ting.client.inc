@@ -263,14 +263,32 @@ function ting_do_search($query, $page = 1, $results_per_page = 10, $options = ar
   $search_result = ting_execute_cache($request);
   // Replace collections with proper TingCollection objects.
   if ($search_result && is_array($search_result->collections)) {
-    $ids = array();
+    /*$ids = array();
     foreach ($search_result->collections as &$collection) {
       if (isset($collection->objects[0])) {
         $ids[] = $collection->objects[0]->id;
       }
-    }
+    }*/
     if (!isset($options['reply_only']) || !$options['reply_only']) {
-      $search_result->collections = entity_load('ting_collection', array(), array('ding_entity_id' => $ids));
+      
+       /* This is a small optimization...about 50ms pr call.
+        * The entities are stored in a static memory cache, and will not require database access if loaded again during the same page request.
+        * Never happens , so there is no need to run past the db. or the overhead functions.
+        * $search_result->collections = entity_load('ting_collection', array(), array('ding_entity_id' => $ids));
+        */
+       $new_collections = array();
+       foreach($search_result->collections as &$collection)
+       {
+           $obj = new TingCollection($collection->objects[0]->id);
+           $obj->reply = $collection;
+           $obj->getEntities(); // warm up the collection.
+           $obj->getTypes();
+           $obj->getTypes_count();
+          $new_collections[] = $obj;
+       }
+       $search_result->collections = $new_collections;
+
+       
     }
   }
 
@@ -505,7 +523,8 @@ function ting_execute($request) {
   try {
     timer_start('ting');
     $res = ting_get_client()->execute($request);
-    timer_stop('ting');
+    $data = timer_stop('ting');
+    echo "Search parsed: " . $data['time'] . "ms";
     return $res;
   } catch (TingClientException $e) {
     timer_stop('ting');
