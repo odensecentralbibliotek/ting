@@ -524,7 +524,7 @@ function ting_execute($request) {
     timer_start('ting');
     $res = ting_get_client()->execute($request);
     $data = timer_stop('ting');
-    echo "Search parsed: " . $data['time'] . "ms";
+    //echo "Search parsed: " . $data['time'] . "ms";
     return $res;
   } catch (TingClientException $e) {
     timer_stop('ting');
